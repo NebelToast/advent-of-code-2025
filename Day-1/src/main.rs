@@ -30,8 +30,27 @@ fn get_zeros(values: Vec<i32>) -> u32 {
     }
     zeros
 }
+
+fn get_zeros_part_two(values: Vec<i32>) -> u32 {
+    let mut dial = 50;
+    let mut zeros = 0;
+    for value in values {
+        let step = if value < 0 { -1 } else { 1 };
+        for _ in 0..value.abs() {
+            dial = (dial + step) % 100;
+            if dial == 0 {
+                zeros += 1;
+            }
+        }
+    }
+
+    zeros
+}
 fn main() {
     let input = get_input();
     let values = get_values(input);
-    print!("{}", get_zeros(values));
+
+    println!("Part one: {}", get_zeros(values.clone()));
+
+    println!("Part two: {}", get_zeros_part_two(values));
 }
