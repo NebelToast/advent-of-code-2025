@@ -12,21 +12,25 @@ fn get_input() -> Vec<(u64, u64)> {
         .collect()
 }
 
-fn is_mirrorable(number: u64) -> bool {
-    let number_str = number.to_string();
+fn is_mirrorable(number_str: &String) -> bool {
+    if number_str.len() % 2 != 0 {
+        return false;
+    }
 
     let (first_half, second_half) = number_str.split_at(number_str.len() / 2);
     first_half == second_half
 }
 
-fn is_invalid_part_two(number: u64) -> bool {
-    let number_str = number.to_string();
+fn is_invalid_part_two(number_str: &String) -> bool {
     let len = number_str.len();
 
     for chunk_size in 1..len {
+        if len % chunk_size != 0 {
+            continue;
+        }
         let pattern = &number_str[..chunk_size];
         let repeated = pattern.repeat(len / chunk_size);
-        if repeated == number_str {
+        if repeated == *number_str {
             return true;
         }
     }
@@ -36,12 +40,13 @@ fn sum_of_invalid(value: Vec<(u64, u64)>) -> (u64, u64) {
     let mut sum_part_one = 0;
     let mut sum_part_two = 0;
     for (val1, val2) in value {
-        for numbers in val1..=val2 {
-            if is_invalid_part_two(numbers) {
-                sum_part_two += numbers
+        for number in val1..=val2 {
+            let number_str = number.to_string();
+            if is_invalid_part_two(&number_str) {
+                sum_part_two += number
             }
-            if is_mirrorable(numbers) {
-                sum_part_one += numbers
+            if is_mirrorable(&number_str) {
+                sum_part_one += number
             }
         }
     }
