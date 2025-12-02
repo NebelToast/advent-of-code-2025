@@ -19,17 +19,36 @@ fn is_mirrorable(number: u64) -> bool {
     first_half == second_half
 }
 
-fn sum_of_invalid(value: Vec<(u64, u64)>) -> u64 {
-    let mut sum = 0;
+fn is_invalid_part_two(number: u64) -> bool {
+    let number_str = number.to_string();
+    let len = number_str.len();
+
+    for chunk_size in 1..len {
+        let pattern = &number_str[..chunk_size];
+        let repeated = pattern.repeat(len / chunk_size);
+        if repeated == number_str {
+            return true;
+        }
+    }
+    false
+}
+fn sum_of_invalid(value: Vec<(u64, u64)>) -> (u64, u64) {
+    let mut sum_part_one = 0;
+    let mut sum_part_two = 0;
     for (val1, val2) in value {
         for numbers in val1..=val2 {
+            if is_invalid_part_two(numbers) {
+                sum_part_two += numbers
+            }
             if is_mirrorable(numbers) {
-                sum += numbers
+                sum_part_one += numbers
             }
         }
     }
-    sum
+    (sum_part_one, sum_part_two)
 }
 fn main() {
-    println!("{}", sum_of_invalid(get_input()));
+    println!("Part one: {}", sum_of_invalid(get_input()).0);
+
+    println!("Part two: {}", sum_of_invalid(get_input()).1);
 }
